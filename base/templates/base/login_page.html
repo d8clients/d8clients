@@ -5,8 +5,10 @@
 {% endblock %}
 
 {% block content %}
-
-    <div>
+    <div align="center">
+        Войти в аккаунт
+    </div>
+    <div align="center">
         <form method="POST" action=".">
             {% csrf_token %}
             {{ form.as_p }}
@@ -14,7 +16,7 @@
         </form>
     </div>
 
-    <div>
+    <div align="center">
         Нет аккаунта?
         <a href="{% url 'registration' %}"> Зарегестрироваться </a>
     </div>

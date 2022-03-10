@@ -1,16 +1,22 @@
 {% extends 'base.html'%}
 
+{% block title %}
+    Личный кабинет
+{% endblock %}
+
 {% block content %}
 
 
-    <div>
+    <div align="center">
             Ваше имя:  {{ user }}
     </div>
 
-    <div>
-        <a href="">Редактировать профиль</a>
-        <a href="">Добавить функционал клиента</a>
-        <a href="">Сменить пароль</a>
+    <div align="right">
+        <a href="{% url 'change_user_info' %}">Редактировать профиль</a>
+        <br>
+        <a href="{% url 'change_role' %}">Добавить функционал клиента</a>
+        <br>
+        <a href="{% url 'change_password' %}">Сменить пароль</a>
     </div>
 
     <div>
