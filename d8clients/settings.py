@@ -85,7 +85,7 @@ WSGI_APPLICATION = 'd8clients.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': f'{BASE_DIR}/db/sqlite.db',
+        'NAME': f'{BASE_DIR}/db/db.sqlite3',
     }
 }
 
