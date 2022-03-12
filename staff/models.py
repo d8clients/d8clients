@@ -1,13 +1,6 @@
 from django.db import models
 from base.models import User
-
-
-class Organization(models.Model):
-    name = models.CharField(max_length=100, null=True)
-    created = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return str(self.name)
+from organization.models import Organization
 
 
 class Employee(models.Model):
@@ -16,7 +9,7 @@ class Employee(models.Model):
     bio = models.TextField(null=True, blank=True)
 
     def __str__(self):
-        return str(self.user.username)
+        return self.user.get_full_name()
 
 
 class Admin(models.Model):
@@ -25,4 +18,4 @@ class Admin(models.Model):
     is_host = models.BooleanField(default=False)
 
     def __str__(self):
-        return str(self.user.username)
+        return self.user.get_full_name()

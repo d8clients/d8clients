@@ -1,18 +1,18 @@
 {% extends 'base.html'%}
 
 {% block title %}
-    Редактировать профиль
+    Создать организацию
 {% endblock %}
 
 {% block content %}
     <div align="center">
-        {{ title }}
+        Создать организацию
     </div>
     <div align="center">
         <form method="POST" action="">
             {% csrf_token %}
             {{ form.as_p }}
-            <input type="submit" value="Подтвердить" />
+            <input type="submit" value="Создать"/>
             <input type="submit" name="cancel" value="Отмена" />
         </form>
     </div>

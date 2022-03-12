@@ -40,7 +40,8 @@ INSTALLED_APPS = [
 
     'base.apps.BaseConfig',
     'client.apps.ClientConfig',
-    'staff.apps.StaffConfig'
+    'staff.apps.StaffConfig',
+    'organization.apps.OrganizationConfig'
 ]
 
 AUTH_USER_MODEL = 'base.User'
@@ -84,7 +85,7 @@ WSGI_APPLICATION = 'd8clients.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': f'{BASE_DIR}/db/sqlite.db',
     }
 }
 

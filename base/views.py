@@ -8,6 +8,7 @@ from client.models import Client
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
 
+
 def main(request):
     # главная страница веб-приложения
     return render(request, 'base/main.html')

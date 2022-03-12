@@ -1,0 +1,24 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    d8clients
+{% endblock %}
+
+{% block content %}
+
+<style>
+    .head_container{
+        display:grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+</style>
+
+
+    <div class="head_container">
+        <a align="center"> Все организации</a>
+        <a align="center"> Управление и работа</a>
+        <a align="center"> Найти организацию</a>
+        <a align="center" href="{% url 'create_org' %}"> Создать организацию</a>
+        <hr> <hr> <hr> <hr>
+    </div>
+{% endblock %}
