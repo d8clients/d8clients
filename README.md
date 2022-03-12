@@ -2,7 +2,7 @@
 
 To build the docker image (under name `nis-app`), use
 ```sh
-docker build -t nis-app
+docker build -t nis-app .
 ```
 
 To run the container, you need to do several things:
@@ -12,5 +12,5 @@ To run the container, you need to do several things:
   ```
 - Then, run the image in background, forwarding port `8080` to `0.0.0.0:80` and mounting database volume to `/app/db`:
   ```sh
-  docker run -db 0.0.0.0:80:8080 -v database:/app/db nis-app
+  docker run -dp 0.0.0.0:80:8080 -v database:/app/db nis-app
   ```
