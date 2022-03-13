@@ -28,6 +28,18 @@ class User(AbstractUser):
     def is_client(self):
         return not self.business_only
 
+    @property
+    def is_admin(self):
+        return bool(self.admin.count())
+
+    @property
+    def is_employee(self):
+        return bool(self.employee.count())
+
+    @property
+    def is_staff(self):
+        return self.is_admin or self.is_employee
+
     def __str__(self):
         return str(self.name) + ' ' + str(self.surname)
 

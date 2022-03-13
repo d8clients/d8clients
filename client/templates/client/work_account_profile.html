@@ -8,19 +8,29 @@
 
 
     <div align="center">
-            Ваше имя:  {{ user }}
+        <h3> {{ user }} </h3>
+        <br> <br>
     </div>
 
-    <div align="right">
-        <a href="{% url 'change_user_info' %}">Редактировать профиль</a>
-        <br>
-        <a href="{% url 'change_role' %}">Добавить функционал клиента</a>
-        <br>
-        <a href="{% url 'change_password' %}">Сменить пароль</a>
-    </div>
+<style>
+.block_container{
+    display:grid;
+    grid-template-columns: 3fr 1fr;
+}
+</style>
 
-    <div>
+<div class="block_container">
+    <div align="center">
         Ваше расписание (только как работника):
     </div>
 
+    <div align="center">
+        <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'change_user_info' %}">Редактировать профиль</a>
+        <br>
+        <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'change_role' %}">Добавить функционал клиента</a>
+        <br>
+        <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'change_password' %}">Сменить пароль</a>
+    </div>
+
+</div>
 {% endblock %}

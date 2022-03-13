@@ -1,0 +1,19 @@
+{% extends 'base.html'%}
+
+{% block title %}
+    Редактирование: {{ org.name }}
+{% endblock %}
+
+{% block content %}
+
+<div>
+    <h1 align="center"> {{ org.name }} </h1>
+    <p class="me-3 py-2 text-dark text-decoration-none" align="center" href="{% url 'org_main' %}"> {{ org.description }}</p>
+</div>
+
+
+<div>
+    <h3 align="center"> Режим редактирования </h3>
+</div>
+
+{% endblock %}

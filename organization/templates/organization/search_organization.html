@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Поиск организации
+{% endblock %}
+
+{% block content %}
+
+    {% include 'organization/org_navbar.html' %}
+
+    <div align="center">
+
+        {% for org in organizations %}
+            <a class="me-3 py-2 text-dark text-decoration-none" align="center" href="{% url 'org_profile' org.id %}"> {{ org.name }}</a>
+            <hr>
+        {% endfor %}
+    </div>
+
+{% endblock %}

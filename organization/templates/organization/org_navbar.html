@@ -1,0 +1,31 @@
+<style>
+    .head_container{
+        display:grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+</style>
+
+
+<div class="head_container">
+
+        {% if user.is_anonymous or user.is_client %}
+
+            <form align="center" method="GET" action="{% url 'search_org' %}">
+                    <input type="text" name="q" placeholder="Найти организацию...."/>
+            </form>
+        {% endif %}
+
+        {% if user.is_authenticated and user.is_client %}
+            <a class="me-3 py-2 text-dark text-decoration-none" align="center" href="{% url 'org_sub' %}"> Подписки на организации</a>
+        {% endif %}
+
+
+        {% if user.is_authenticated and user.is_staff %}
+            <a class="me-3 py-2 text-dark text-decoration-none" align="center" href="{% url 'work_org' %}"> Управление и работа</a>
+        {% endif %}
+
+        <a class="me-3 py-2 text-dark text-decoration-none" align="center" href="{% url 'create_org' %}"> Создать организацию</a>
+</div>
+<hr>
+
+

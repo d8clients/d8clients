@@ -1,0 +1,40 @@
+{% extends 'base.html'%}
+
+{% block title %}
+    {{ org.name }}
+{% endblock %}
+
+{% block content %}
+
+<div>
+    <h1 align="center"> {{ org.name }} </h1>
+    <p class="me-3 py-2 text-dark text-decoration-none" align="center" href="{% url 'org_main' %}"> {{ org.description }}</p>
+</div>
+
+<div align="right">
+    {% if request.user.is_authenticated and request.user.is_client %}
+
+    <form method="POST" action="">
+        {% csrf_token %}
+        <input type="submit" name="{{ subscribed }}" value="{{ subscribed }}" />
+    </form>
+    {% endif %}
+
+    {% if request.user.is_anonymous %}
+
+    <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'login'%}"> Авторизуйтесь, чтобы следить <br> за
+    обновлениями {{ org.name }} </a>
+    {% endif %}
+
+</div>
+
+<div align="right">
+    {% if is_admin %}
+    <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'org_edit' org.id %}"> Перейти в режим редактирования </a>
+    {% endif %}
+    {% if is_staff %}
+    <a class="me-3 py-2 text-dark text-decoration-none" href=""> Посмотреть свое расписание </a>
+    {% endif %}
+</div>
+
+{% endblock %}

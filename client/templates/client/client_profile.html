@@ -7,24 +7,43 @@
 {% block content %}
 
 
+
     <div align="center">
-            Ваше имя:  {{ user }}
+        <h3> {{ user }} </h3>
+        <br> <br>
     </div>
 
-    <div align="right">
-        <a href="{% url 'change_user_info' %}">Редактировать профиль</a>
+<style>
+.block_container{
+    display:grid;
+    grid-template-columns: 2fr 3fr 1fr;
+}
+</style>
+
+<div class="block_container">
+
+    <div align="center">
+        Ваши избранные организации:
         <br>
-        <a href="{% url 'change_password' %}">Сменить пароль</a>
-        <br>
-        <a href="{% url 'change_role' %}">Переключиться на профессиональный аккаунт</a>
+        {% for org in subscribes %}
+            <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'org_profile' org.id %}">{{org.name}}</a>
+            <br>
+            {% endfor%}
     </div>
 
-    <div>
+    <div align="center">
         Ближайшие записи:
     </div>
 
-    <div>
-        Ваши избранные организации:
+
+    <div align="center">
+        <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'change_user_info' %}">Редактировать профиль</a>
+        <br>
+        <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'change_password' %}">Сменить пароль</a>
+        <br>
+        <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'change_role' %}">Переключиться на профессиональный аккаунт</a>
     </div>
+
+</div>
 
 {% endblock %}

@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    d8clients
+{% endblock %}
+
+{% block content %}
+
+    {% include 'organization/org_navbar.html' %}
+
+    <div align="center">
+            {% for org in subscribes %}
+            <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'org_profile' org.id %}">{{org.name}}</a>
+            <br>
+            {% endfor%}
+    </div>
+
+{% endblock %}
+
