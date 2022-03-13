@@ -6,8 +6,6 @@
 
 {% block content %}
 
-
-
     <div align="center">
         <h3> {{ user }} </h3>
         <br> <br>
@@ -16,11 +14,15 @@
 <style>
 .block_container{
     display:grid;
-    grid-template-columns: 2fr 3fr 1fr;
+    grid-template-columns: 1fr 2fr 3fr 1fr;
 }
 </style>
 
 <div class="block_container">
+
+    <div align="center">
+        {% include 'client/work_requests.html' %}
+    </div>
 
     <div align="center">
         Ваши избранные организации:

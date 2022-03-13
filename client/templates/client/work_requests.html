@@ -1,0 +1,36 @@
+
+<div align="center">
+    {% if employee_req_exist or admin_req_exist %}
+        Заявки на работу:
+        <br>
+
+        {% if employee_req_exist %}
+        Исполнителем:
+        {% for employee in employee_req %}
+
+    <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'org_profile' employee.organization.id %}">{{ employee.organization.name }} </a>
+            <form method="POST" action="">
+                {% csrf_token %}
+                <input type="submit" name="accept_employee_{{employee.organization.id}}" value="Принять" />
+                <input type="submit" name="reject_employee_{{employee.organization.id}}" value="Отклонить" />
+            </form>
+
+        {% endfor %}
+        <br>
+        {% endif %}
+
+        {% if admin_req_exist %}
+        Как администратора:
+        {% for admin in admin_req %}
+
+    <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'org_profile' admin.organization.id %}">{{ admin.organization.name }} </a>
+            <form method="POST" action="">
+                {% csrf_token %}
+                <input type="submit" name="accept_admin_{{admin.organization.id}}" value="Принять" />
+                <input type="submit" name="reject_admin_{{admin.organization.id}}" value="Отклонить" />
+            </form>
+
+        {% endfor %}
+        {% endif %}
+    {% endif %}
+</div>

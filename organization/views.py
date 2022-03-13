@@ -1,9 +1,11 @@
 from django.shortcuts import render, redirect
-from .forms import CreateOrg
+from .forms import CreateOrg, AddAdmin, AddEmployee
 from .models import Organization
 from staff.models import Admin
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
+from base.models import User
+from staff.models import Admin, Employee
 
 
 def organizations_main_page(request):
@@ -50,8 +52,6 @@ def organization_work(request):
         'admin_work': [admin.organization for admin in user.admin.all()],
         'employee_work': [employee.organization for employee in user.employee.all()]
     }
-    print(user.is_admin)
-    print(user.is_employee)
     return render(request, 'organization/work_list_org.html', context=context)
 
 
@@ -120,7 +120,12 @@ def search_organization(request):
 
 
 def organization_profile(request, pk):
-    org = Organization.objects.get(id=pk)
+
+    try:
+        org = Organization.objects.get(id=pk)
+    except Organization.DoesNotExist:
+        messages.error(request, "Такой организации не существует")
+        return redirect('org_main')
 
     # подписываем/отписываем клиента в зависимости от формы
     if request.method == "POST":
@@ -140,26 +145,222 @@ def organization_profile(request, pk):
     # проверяем, относится ли пользователь к персоналу организации
     is_admin = False
     is_staff = False
-    if request.user.admin.filter(organization=org).count():
-        print(request.user.admin.filter(organization=org))
-        is_admin = True
-    if request.user.employee.filter(organization=org).count():
-        print(request.user.employee.filter(organization=org))
-        is_staff = True
+    if request.user.is_authenticated:
+        if request.user.admin.filter(organization=org).count():
+            print(request.user.admin.filter(organization=org))
+            is_admin = True
+        if request.user.employee.filter(organization=org).count():
+            print(request.user.employee.filter(organization=org))
+            is_staff = True
 
-    context = {'user': request.user,
-               'org': org, 'subscribed': subscribed,
-               'is_admin': is_admin, 'is_staff': is_staff}
+    employees = org.employees.filter(confirmed=True)
+
+    context = {
+        'user': request.user,
+        'org': org, 'subscribed': subscribed,
+        'is_admin': is_admin, 'is_staff': is_staff,
+        'employees': employees
+    }
+
     return render(request, 'organization/organization_profile.html', context=context)
+
+
+def edit_org_perm(user, org):
+    # проверяем, является ли пользователь администратором организации
+    return org.admins.filter(user=user).exists()
 
 
 @login_required(login_url='login')
 def organization_edit_mode(request, pk):
 
-    org = Organization.objects.get(id=pk)
-    if org.admins.filter(user=request.user).first is None:
+    try:
+        org = Organization.objects.get(id=pk)
+    except Organization.DoesNotExist:
+        messages.error(request, "Такой организации не существует")
+        return redirect('org_main')
+
+    if not edit_org_perm(request.user, org):
         return redirect('org_profile', pk)
 
-    context = {'user': request.user,
-               'org': org}
+    conf_employees = org.employees.filter(confirmed=True)
+    unconf_employees = org.employees.filter(confirmed=False)
+
+    conf_admins = org.admins.filter(confirmed=True)
+    unconf_admins = org.admins.filter(confirmed=False)
+
+    context = {
+        'user': request.user,
+        'org': org,
+        'conf_employees': conf_employees,
+        'unconf_employees': unconf_employees,
+        'conf_admins': conf_admins,
+        'unconf_admins': unconf_admins,
+    }
     return render(request, 'organization/organization_edit_mode.html', context=context)
+
+
+@login_required(login_url='login')
+def add_employee(request, pk):
+    """
+        администратор добавляет
+        нового сотрудника в организацию
+    """
+    # проверяем, есть ли такая организация
+    try:
+        org = Organization.objects.get(id=pk)
+    except Organization.DoesNotExist:
+        messages.error(request, "Такой организации не существует")
+        return redirect('org_main')
+
+    # проверяем, что у пользователя достаточно прав
+    if not edit_org_perm(request.user, org):
+        return redirect('org_profile', pk)
+
+    form = AddEmployee()
+
+    if request.method == 'POST':
+        # если пользователь нажал "отмена", то возвращаем его
+        if "cancel" in request.POST:
+            return redirect('org_edit', pk)
+        else:
+            form = AddEmployee(request.POST)
+            if form.is_valid():
+                email = form.cleaned_data['email']
+
+                # проверяем, существует ли человек с таким e-mail
+                if User.objects.filter(email=email).exists():
+                    user = User.objects.get(email=email)
+                    # проверяем, есть ли уже такой сотрудник
+                    if not user.employee.filter(organization=org).exists():
+                        employee = Employee.objects.create(
+                            user=user,
+                            organization=org,
+                            bio="",
+                            confirmed=False
+                        )
+                        return redirect('org_edit', pk=org.id)
+                    else:
+                        messages.error(request, "Вы уже добавили этого пользователя в сотрудники")
+                else:
+                    messages.error(request, "Пользователя с таким e-mail не существует")
+            else:
+                messages.error(request, "Не получилось добавить сотрудника")
+
+    context = {
+        'user': request.user,
+        'org':  org,
+        'form': form,
+        'title': 'Добавить сотрудника'
+    }
+    return render(request, 'organization/edit_org_forms.html', context=context)
+
+
+@login_required(login_url='login')
+def add_admin(request, pk):
+    """
+        администратор добавляет
+        нового администратора в организацию
+    """
+    # проверяем, есть ли такая организация
+    try:
+        org = Organization.objects.get(id=pk)
+    except Organization.DoesNotExist:
+        messages.error(request, "Такой организации не существует")
+        return redirect('org_main')
+
+    # проверяем, что у пользователя достаточно прав
+    if not edit_org_perm(request.user, org):
+        return redirect('org_profile', pk)
+
+    form = AddEmployee()
+
+    if request.method == 'POST':
+        # если пользователь нажал "отмена", то возвращаем его
+        if "cancel" in request.POST:
+            return redirect('org_edit', pk)
+        else:
+            form = AddAdmin(request.POST)
+            if form.is_valid():
+                email = form.cleaned_data['email']
+
+                # проверяем, существует ли человек с таким e-mail
+                if User.objects.filter(email=email).exists():
+                    user = User.objects.get(email=email)
+                    # проверяем, есть ли уже такой сотрудник
+                    if not user.admin.filter(organization=org).exists():
+                        admin = Admin.objects.create(
+                            user=user,
+                            organization=org,
+                            confirmed=False
+                        )
+                        return redirect('org_edit', pk=org.id)
+                    else:
+                        messages.error(request, "Вы уже добавили этого пользователя в администраторы")
+                else:
+                    messages.error(request, "Пользователя с таким e-mail не существует")
+            else:
+                messages.error(request, "Не получилось добавить администратора")
+
+    context = {
+        'user': request.user,
+        'org':  org,
+        'form': form,
+        'title': 'Добавить администратора'
+    }
+    return render(request, 'organization/edit_org_forms.html', context=context)
+
+
+@login_required(login_url='login')
+def delete_employee(request, pk):
+    """
+            администратор удаляет сотрудника
+            из организации
+    """
+    # проверяем, есть ли такой сотрудник
+    try:
+        employee = Employee.objects.get(id=pk)
+    except Employee.DoesNotExist:
+        messages.error(request, "Такого сотрудника не существует")
+        return redirect('org_main')
+
+    org = employee.organization
+
+    # проверяем, что у пользователя достаточно прав
+    if not edit_org_perm(request.user, org):
+        return redirect('org_profile', org.id)
+
+    employee.delete()
+
+    return redirect('org_edit', org.id)
+
+
+@login_required(login_url='login')
+def delete_admin(request, pk):
+    """
+            администратор удаляет администратора
+            из организации
+    """
+
+    # проверяем, есть ли такой администратор
+    try:
+        admin = Admin.objects.get(id=pk)
+    except Employee.DoesNotExist:
+        messages.error(request, "Такого сотрудника не существует")
+        return redirect('org_main')
+
+    org = admin.organization
+
+    # проверяем, что у пользователя достаточно прав
+    if not edit_org_perm(request.user, org):
+        return redirect('org_profile', org.id)
+
+    if admin.user == request.user:
+        messages.error(request, 'Вы не можете сами удалить себя из организации')
+        return redirect('org_edit', org.id)
+
+    if not admin.is_host:
+        admin.delete()
+    else:
+        messages.error(request, 'Вы не удалить владельца организации')
+
+    return redirect('org_edit', org.id)

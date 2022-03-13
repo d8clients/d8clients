@@ -1,0 +1,21 @@
+{% extends 'base.html'%}
+
+{% block title %}
+    Редактирование: {{ org.name }}
+{% endblock %}
+
+{% block content %}
+
+    <div align="center">
+        {{ title }}
+    </div>
+    <div align="center">
+        <form method="POST" action="">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Ок"/>
+            <input type="submit" name="cancel" value="Отмена" />
+        </form>
+    </div>
+
+{% endblock %}

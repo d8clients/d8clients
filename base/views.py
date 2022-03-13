@@ -25,9 +25,10 @@ def registration_page(request):
         с помощью формы UserRegistrationForm()
     """
     if request.user.is_authenticated:
-        return redirect('main')
+        return redirect('client_profile')
 
     form = UserRegistrationForm()
+    next_url = request.GET.get('next') if 'next' in request.GET else 'client_profile'
 
     # если пользователь отправил форму
     if request.method == 'POST':
@@ -44,11 +45,11 @@ def registration_page(request):
                 client.save()
             # происходит авторизация пользователя и перенаправление
             login(request, user)
-            return redirect('main')
+            return redirect(next_url)
         else:
             messages.error(request, 'Произошла ошибка во время регистрации, попробуйте еще раз')
 
-    context = {'form': form}
+    context = {'form': form, 'next_url': next_url}
     return render(request, 'base/registration_page.html', context=context)
 
 
@@ -59,9 +60,10 @@ def login_page(request):
     """
     # если пользователь уже авторизован, то перенаправляем на главную
     if request.user.is_authenticated:
-        return redirect("main")
+        return redirect('client_profile')
 
     form = LoginForm()
+    next_url = request.GET.get('next') if 'next' in request.GET else 'client_profile'
 
     if request.method == "POST":
 
@@ -76,13 +78,13 @@ def login_page(request):
             if user is not None:
                 if user.is_active:
                     login(request, user)
-                    return redirect("main")
+                    return redirect(next_url)
                 else:
                     messages.error(request, 'Неактивный аккаунт')
             else:
                 messages.error(request, 'Неверный e-mail или пароль')
 
-    context = {'form': form}
+    context = {'form': form, 'next_url': next_url}
     return render(request, 'base/login_page.html', context=context)
 
 

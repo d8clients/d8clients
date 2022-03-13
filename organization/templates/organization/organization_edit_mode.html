@@ -16,4 +16,68 @@
     <h3 align="center"> Режим редактирования </h3>
 </div>
 
+<div align="right">
+    <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'org_profile' org.id %}"> Вернуться в режим просмотра</a>
+</div>
+
+<style>
+    .block_container{
+        display:grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+</style>
+
+
+<div class="block_container">
+    <div>
+    <h5> Сотрудники </h5>
+    <a class="me-3 py-2 text-dark text-decoration-none" align="center" href="{% url 'add_employee' org.id %}"> Добавить сотрудника </a>
+    <div>
+        Подтвержденные сотрудники:
+        {% for employee in conf_employees %}
+        <p>
+            <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'employee_profile' employee.id %}"> {{ employee.user }} </a>
+            <a href="{% url 'edit_employee' employee.id %}"> Редактировать </a>
+            <a href="{% url 'delete_employee' employee.id %}"> Удалить </a>
+        </p>
+        {% endfor %}
+    </div>
+    <div>
+        Неподтвержденные сотрудники (дождитесь, пока пользователи подтвердят вашу заявку):
+        {% for employee in unconf_employees %}
+        <p>
+            <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'employee_profile' employee.id %}"> {{ employee.user }} </a>
+            <a href="{% url 'delete_employee' employee.id %}"> Отменить заявку </a>
+        </p>
+        {% endfor %}
+    </div>
+    </div>
+
+    <div>
+    <h5> Администраторы </h5>
+    <a class="me-3 py-2 text-dark text-decoration-none" align="center" href="{% url 'add_admin' org.id %}"> Добавить администратора </a>
+    <div>
+        Подтвержденные администраторы:
+        {% for admin in conf_admins %}
+        <p>
+            {{ admin.user }}
+            {% if admin.user != request.user and not admin.is_host%}
+                <a href="{% url 'delete_admin' admin.id %}"> Удалить </a>
+            {% endif %}
+        </p>
+        {% endfor %}
+    </div>
+    <div>
+        Неподтвержденные администраторы (дождитесь, пока пользователи подтвердят вашу заявку):
+        {% for admin in unconf_admins %}
+        <p>
+            {{ admin.user }}
+            <a href="{% url 'delete_admin' admin.id %}"> Отменить заявку </a>
+        </p>
+        {% endfor %}
+    </div>
+    </div>
+
+</div>
+
 {% endblock %}

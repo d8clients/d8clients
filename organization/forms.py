@@ -11,7 +11,6 @@ class CreateOrg(forms.ModelForm):
         fields = ['name', 'description']
 
     def clean_name(self):
-        print(self.cleaned_data)
         if 'name' not in self.cleaned_data:
             raise forms.ValidationError('Введите имя организации')
         else:
@@ -20,3 +19,31 @@ class CreateOrg(forms.ModelForm):
                 raise forms.ValidationError('Введите имя организации')
 
         return self.cleaned_data['name']
+
+
+class AddEmployee(forms.Form):
+    email = forms.EmailField(required=False)
+
+    def clean_email(self):
+        if 'email' not in self.cleaned_data:
+            raise forms.ValidationError('Введите e-mail')
+        else:
+            email = self.cleaned_data['email']
+            if email == '':
+                raise forms.ValidationError('Введите e-mail')
+
+        return self.cleaned_data['email']
+
+
+class AddAdmin(forms.Form):
+    email = forms.EmailField(required=False)
+
+    def clean_email(self):
+        if 'email' not in self.cleaned_data:
+            raise forms.ValidationError('Введите e-mail')
+        else:
+            email = self.cleaned_data['email']
+            if email == '':
+                raise forms.ValidationError('Введите e-mail')
+
+        return self.cleaned_data['email']

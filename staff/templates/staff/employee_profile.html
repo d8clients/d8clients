@@ -1,0 +1,13 @@
+{% extends 'base.html'%}
+
+{% block title %}
+    {{ org.name }}
+{% endblock %}
+
+{% block content %}
+<div align="center">
+    <a href="{% url 'org_profile' employee.organization.id %}"> {{ employee.organization.name }} </a>
+    <h4> {{ employee.user }} </h4>
+    <p> {{ employee.bio }} </p>
+</div>
+{% endblock %}

@@ -15,11 +15,37 @@
 <style>
 .block_container{
     display:grid;
-    grid-template-columns: 3fr 1fr;
+    grid-template-columns: 1fr 1fr 3fr 1fr;
 }
 </style>
 
 <div class="block_container">
+    <div>
+        {% include 'client/work_requests.html' %}
+    </div>
+
+    <div align="center">
+        {% if user.is_admin %}
+         <div align="center">
+            <h5> Работа администратором: </h5>
+            {% for org in admin_work %}
+            <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'org_profile' org.id %}"> {{org}}</a>
+            <br>
+            {% endfor%}
+         </div>
+        {% endif %}
+
+        {% if user.is_employee %}
+        <div align="center">
+            <h3> Работа исполнителем: </h3>
+            {% for org in employee_work %}
+            <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'org_profile' org.id %}"> {{org}}</a>
+            <br>
+            {% endfor%}
+        </div>
+        {% endif %}
+    </div>
+
     <div align="center">
         Ваше расписание (только как работника):
     </div>
