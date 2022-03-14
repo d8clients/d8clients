@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
-from .forms import CreateOrg, AddAdmin, AddEmployee
-from .models import Organization
+from .forms import CreateOrg, AddAdmin, AddEmployee, AddService
+from .models import Organization, Service
 from staff.models import Admin
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -120,7 +120,9 @@ def search_organization(request):
 
 
 def organization_profile(request, pk):
-
+    """
+        страница организации
+    """
     try:
         org = Organization.objects.get(id=pk)
     except Organization.DoesNotExist:
@@ -147,10 +149,8 @@ def organization_profile(request, pk):
     is_staff = False
     if request.user.is_authenticated:
         if request.user.admin.filter(organization=org).count():
-            print(request.user.admin.filter(organization=org))
             is_admin = True
         if request.user.employee.filter(organization=org).count():
-            print(request.user.employee.filter(organization=org))
             is_staff = True
 
     employees = org.employees.filter(confirmed=True)
@@ -159,7 +159,8 @@ def organization_profile(request, pk):
         'user': request.user,
         'org': org, 'subscribed': subscribed,
         'is_admin': is_admin, 'is_staff': is_staff,
-        'employees': employees
+        'employees': employees,
+        'services': org.services.all()
     }
 
     return render(request, 'organization/organization_profile.html', context=context)
@@ -172,7 +173,9 @@ def edit_org_perm(user, org):
 
 @login_required(login_url='login')
 def organization_edit_mode(request, pk):
-
+    """
+        режим редактирования для администратора
+    """
     try:
         org = Organization.objects.get(id=pk)
     except Organization.DoesNotExist:
@@ -195,6 +198,7 @@ def organization_edit_mode(request, pk):
         'unconf_employees': unconf_employees,
         'conf_admins': conf_admins,
         'unconf_admins': unconf_admins,
+        'services': org.services.all()
     }
     return render(request, 'organization/organization_edit_mode.html', context=context)
 
@@ -364,3 +368,148 @@ def delete_admin(request, pk):
         messages.error(request, 'Вы не удалить владельца организации')
 
     return redirect('org_edit', org.id)
+
+
+@login_required(login_url='login')
+def add_service(request, pk):
+    """
+        администратор добавляет
+        новую услугу
+    """
+    # проверяем, есть ли такая организация
+    try:
+        org = Organization.objects.get(id=pk)
+    except Organization.DoesNotExist:
+        messages.error(request, "Такой организации не существует")
+        return redirect('org_main')
+
+    # проверяем, что у пользователя достаточно прав
+    if not edit_org_perm(request.user, org):
+        return redirect('org_profile', pk)
+
+    form = AddService(organization=org)
+
+    if request.method == 'POST':
+        # если пользователь нажал "отмена", то возвращаем его
+        if "cancel" in request.POST:
+            return redirect('org_edit', pk)
+        else:
+            # получаем данные из формы и проверяем их на корректность
+            form = AddService(request.POST, organization=org)
+            if form.is_valid():
+                cd = form.cleaned_data
+                # создаем объект типа Service
+                service = Service.objects.create(
+                    name=cd['name'],
+                    description=cd['description'],
+                    organization=org,
+                    time=cd['time'],
+                    price=cd['price']
+                )
+
+                # добавляем услугу к выбранным сотрудникам
+                if 'employees' in cd and cd['employees'] is not None:
+                    for employee in cd['employees']:
+                        employee.services.add(service)
+
+                return redirect('org_edit', pk=org.id)
+            else:
+                messages.error(request, "Не получилось добавить услугу")
+
+    context = {
+        'user': request.user,
+        'org': org,
+        'form': form,
+        'title': 'Добавить услугу'
+    }
+    return render(request, 'organization/edit_org_forms.html', context=context)
+
+
+def service_profile(request, pk):
+    """
+        страница услуги
+    """
+    try:
+        service = Service.objects.get(id=pk)
+    except Service.DoesNotExist:
+        messages.error(request, "Такой услуги не существует")
+        return redirect('org_main')
+
+    context = {
+        'service': service,
+        'employees': service.employees.all(),
+        'is_admin': edit_org_perm(request.user, service.organization),
+    }
+    return render(request, "organization/service_profile.html", context=context)
+
+
+@login_required(login_url='login')
+def delete_service(request, pk):
+    """
+            администратор удаляет услугу
+            из списка услуг организации
+    """
+    # проверяем, есть ли такая услуга
+    try:
+        service = Service.objects.get(id=pk)
+    except Service.DoesNotExist:
+        messages.error(request, "Такой услуги не существует")
+        return redirect('org_main')
+
+    org = service.organization
+
+    # проверяем, что у пользователя достаточно прав
+    if not edit_org_perm(request.user, org):
+        return redirect('org_profile', org.id)
+
+    service.delete()
+
+    return redirect('org_edit', org.id)
+
+
+@login_required(login_url='login')
+def edit_service(request, pk):
+    try:
+        service = Service.objects.get(id=pk)
+    except Service.DoesNotExist:
+        messages.error(request, "Такой услуги не существует")
+        return redirect('org_main')
+
+    org = service.organization
+    if not edit_org_perm(request.user, org):
+        return redirect('org_profile', org.id)
+
+    form = AddService(
+        None,
+        organization=org,
+        instance=service,
+        initial={
+            "employees": [
+                employee for employee in service.employees.all().values_list("id", flat=True)
+            ]
+        }
+    )
+
+    if request.method == "POST":
+        # если пользователь нажал "отмена", то возвращаем в личный кабинет
+        if "cancel" in request.POST:
+            return redirect("service_profile", service.id)
+        else:
+            form = AddService(
+                request.POST,
+                organization=org,
+                instance=service
+            )
+            if form.is_valid():
+                form.save()
+                for employee in org.employees.all():
+                    if employee in form.cleaned_data["employees"]:
+                        employee.services.add(service)
+                    else:
+                        employee.services.remove(service)
+                return redirect("service_profile", service.id)
+            else:
+                messages.error(request, 'Не удалось изменить данные')
+
+    context = {'form': form, 'title': "Редактировать информацию об услуге"}
+    return render(request, 'organization/edit_org_forms.html', context=context)

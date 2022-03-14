@@ -37,11 +37,36 @@
     {% endif %}
 </div>
 
-<div alig="center">
-    Сотрудники:
-    {% for employee in employees %}
-    <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'employee_profile' employee.id %}"> {{ employee.user }} </a>
-    {% endfor %}
-</div>
 
+<style>
+    .block_container{
+        display:grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+    }
+</style>
+
+<div class="block_container">
+    <div align="center">
+        Наши сотрудники:
+        <br>
+        {% for employee in employees %}
+        <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'employee_profile' employee.id %}"> {{ employee.user }} </a>
+        <br>
+        {% endfor %}
+    </div>
+
+    <div align="center">
+        <h5> Наши услуги: </h5>
+        <br>
+        {% for service in services %}
+            <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'service_profile' service.id %}">
+                {{ service.name }} <br>
+                {{ service.price }} рублей <br>
+                {{ service.time }} минут <br>
+            </a>
+        <br>
+        {% endfor %}
+
+    </div>
+</div>
 {% endblock %}

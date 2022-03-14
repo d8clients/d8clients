@@ -13,7 +13,11 @@ def employee_profile(request, pk):
         messages.error(request, "Такого сотрудника не существует")
         return redirect('org_main')
 
-    context = {'employee': employee}
+    context = {'employee': employee,
+               'is_admin': edit_org_perm(request.user, employee.organization),
+               'services': employee.services.all()
+               }
+
     return render(request, "staff/employee_profile.html", context=context)
 
 
@@ -28,14 +32,14 @@ def edit_employee(request, pk):
     if not edit_org_perm(request.user, org):
         return redirect('org_profile', org.id)
 
-    form = EditEmployee(None, instance=employee)
+    form = EditEmployee(None, organization=org, instance=employee)
 
     if request.method == "POST":
         # если пользователь нажал "отмена", то возвращаем в личный кабинет
         if "cancel" in request.POST:
             return redirect("employee_profile", employee.id)
         else:
-            form = EditEmployee(request.POST, instance=employee)
+            form = EditEmployee(request.POST, organization=org, instance=employee)
             if form.is_valid():
                 form.save()
                 return redirect("employee_profile", employee.id)

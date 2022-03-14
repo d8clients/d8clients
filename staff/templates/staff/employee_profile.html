@@ -6,8 +6,21 @@
 
 {% block content %}
 <div align="center">
-    <a href="{% url 'org_profile' employee.organization.id %}"> {{ employee.organization.name }} </a>
+    <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'org_profile' employee.organization.id %}"> {{ employee.organization.name }} </a>
     <h4> {{ employee.user }} </h4>
     <p> {{ employee.bio }} </p>
+
+    {% if is_admin %}
+    <a href="{% url 'edit_employee' employee.id %}"> Редактировать </a>
+    {% endif %}
+
+    <div>
+        Можно записаться на услуги:
+        <br>
+        {% for service in services %}
+        <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'service_profile' service.id %}"> {{ service }} </a>
+        <br>
+        {% endfor %}
+    </div>
 </div>
 {% endblock %}

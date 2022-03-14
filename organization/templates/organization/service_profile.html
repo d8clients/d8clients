@@ -1,0 +1,30 @@
+{% extends 'base.html'%}
+
+{% block title %}
+    {{ service.name }} - {{ service.organization.name }}
+{% endblock %}
+
+{% block content %}
+<div align="center">
+    <a href="{% url 'org_profile' service.organization.id %}"> {{ service.organization.name }} </a>
+    <h4> {{ service }} </h4>
+    <p> {{ service.description }} </p>
+    <p> Цена: {{ service.price }}p.</p>
+    <p> Время выполнения: {{ service.time }} мин.</p>
+</div>
+
+<div align="center">
+{% if is_admin %}
+    <a href="{% url 'edit_service' service.id %}"> Редактировать </a>
+{% endif %}
+</div>
+
+<div align="center">
+    Специалисты:
+    <br>
+    {% for employee in employees %}
+    <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'employee_profile' employee.id %}"> {{ employee.user.name }} </a>
+    <br>
+    {% endfor %}
+</div>
+{% endblock %}

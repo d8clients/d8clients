@@ -23,12 +23,13 @@
 <style>
     .block_container{
         display:grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr;
+        grid-template-columns: 1fr 1fr 2fr 1fr;
     }
 </style>
 
 
 <div class="block_container">
+
     <div>
     <h5> Сотрудники </h5>
     <a class="me-3 py-2 text-dark text-decoration-none" align="center" href="{% url 'add_employee' org.id %}"> Добавить сотрудника </a>
@@ -78,6 +79,24 @@
     </div>
     </div>
 
+    <div>
+        <h5> Наши услуги: </h5>
+        <a class="me-3 py-2 text-dark text-decoration-none" align="center" href="{% url 'add_service' org.id %}">Добавить услугу </a>
+        <br>
+        {% for service in services %}
+            <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'service_profile' service.id %}">
+                {{ service.name }} <br>
+                {{ service.price }} рублей <br>
+                {{ service.time }} минут <br>
+            </a>
+            <a href="{% url 'edit_service' service.id %}"> Редактировать </a>
+            <a href="{% url 'delete_service' service.id %}"> Удалить </a>
+            <br>
+            <br>
+        {% endfor %}
+    </div>
+
 </div>
 
 {% endblock %}
+
