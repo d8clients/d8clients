@@ -10,7 +10,7 @@ To run the container, you need to do several things:
   ```sh
   docker volume create database
   ```
-- Then, run the image in background, forwarding port `8080` to `0.0.0.0:80` and mounting database volume to `/app/db`:
+- Then, run the image in background, forwarding port `8000` to `0.0.0.0:80` and mounting database volume to `/app/db`:
   ```sh
-  docker run -dp 0.0.0.0:80:8080 -v database:/app/db nis-app
+  docker run -dp 0.0.0.0:80:8000 -v database:/app/db nis-app
   ```
