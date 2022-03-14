@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect
-from .forms import CreateOrg, AddAdmin, AddEmployee, AddService
+from .forms import CreateOrg, AddAdmin, AddEmployee, AddService, CreateAssignmentStep1, CreateAssignmentStep2
 from .models import Organization, Service
+from .assign_model import Assignment
 from staff.models import Admin
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from base.models import User
 from staff.models import Admin, Employee
-
+import datetime
 
 def organizations_main_page(request):
     """
@@ -162,6 +163,9 @@ def organization_profile(request, pk):
         'employees': employees,
         'services': org.services.all()
     }
+    if is_staff:
+        emp = request.user.employee.get(organization=org)
+        context['emp'] = emp
 
     return render(request, 'organization/organization_profile.html', context=context)
 
@@ -513,3 +517,89 @@ def edit_service(request, pk):
 
     context = {'form': form, 'title': "Редактировать информацию об услуге"}
     return render(request, 'organization/edit_org_forms.html', context=context)
+
+
+@login_required(login_url='login')
+def create_assignment1(request, pk):
+    # удаляем все ненужные записи
+    Assignment.objects.filter(confirmed=False).delete()
+
+    # pk - id организации
+    if not request.user.is_client:
+        return redirect('main')
+
+    # проверяем, есть ли такая организация
+    try:
+        org = Organization.objects.get(id=pk)
+    except Organization.DoesNotExist:
+        messages.error(request, "Такой организации не существует")
+        return redirect('org_main')
+
+    form = CreateAssignmentStep1(organization=org)
+
+    if request.method == "POST":
+        # если пользователь нажал "отмена", то возвращаем в личный кабинет
+        if "cancel" in request.POST:
+            return redirect("org_profile", org.id)
+        else:
+            form = CreateAssignmentStep1(
+                request.POST,
+                organization=org
+            )
+            if form.is_valid():
+                cd = form.cleaned_data
+                assignment = Assignment.objects.create(
+                    employee=cd['employee'],
+                    client=request.user.client,
+                    service=cd['service'],
+                    date=cd['date'],
+                    start=datetime.time(0, 0, 0),
+                    confirmed=False
+                )
+                return redirect('create_assignment2', assignment.id)
+            else:
+                messages.error(request, 'Не удалось создать запись')
+
+    context = {'form': form, 'title': "Записаться"}
+    return render(request, 'organization/assignment_form1.html', context=context)
+
+
+@login_required(login_url='login')
+def create_assignment2(request, pk):
+    # pk - id assignment
+    if not request.user.is_client:
+        return redirect('main')
+
+    # проверяем, есть ли такая запись
+    try:
+        ass = Assignment.objects.get(id=pk)
+    except Assignment.DoesNotExist:
+        messages.error(request, "Такой организации не существует")
+        return redirect('org_main')
+
+    form = CreateAssignmentStep2(
+        workday=ass.employee.workdays.get(date=ass.date),
+        service=ass.service
+    )
+
+    if request.method == "POST":
+        # если пользователь нажал "отмена", то возвращаем в личный кабинет
+        if "back" in request.POST:
+            return redirect("create_assignment1", ass.service.organization.id)
+        else:
+            form = CreateAssignmentStep2(
+                request.POST,
+                workday=ass.employee.workdays.get(date=ass.date),
+                service=ass.service
+            )
+            if form.is_valid():
+                cd = form.cleaned_data
+                ass.start = cd['start']
+                ass.confirmed = True
+                ass.save()
+                return redirect('client_profile')
+            else:
+                messages.error(request, 'Не удалось создать запись')
+
+    context = {'form': form, 'title': "Записаться"}
+    return render(request, 'organization/assignment_form2.html', context=context)

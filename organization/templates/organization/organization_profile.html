@@ -33,9 +33,14 @@
     <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'org_edit' org.id %}"> Перейти в режим редактирования </a>
     {% endif %}
     {% if is_staff %}
-    <a class="me-3 py-2 text-dark text-decoration-none" href=""> Посмотреть свое расписание </a>
+    <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'employee_ass' emp.id %}"> Посмотреть свое расписание </a>
+    {% endif %}
+
+    {% if request.user.is_client %}
+    <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'create_assignment1' org.id %}"> Записаться </a>
     {% endif %}
 </div>
+
 
 
 <style>

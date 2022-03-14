@@ -4,6 +4,7 @@ from organization.models import Organization, Service
 import datetime
 from django.utils import timezone
 
+
 class Employee(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='employee')
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name='employees')
@@ -37,6 +38,8 @@ class WorkDay(models.Model):
         в определенный день
     """
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name="workdays")
-    date = models.DateField(default=datetime.date.today())
-    start = models.DateTimeField(default=timezone.now())
-    end = models.DateTimeField(default=timezone.now())
+
+    date = models.DateField(default=datetime.datetime.now().date())
+    start = models.TimeField(default=datetime.datetime.now().time())
+    end = models.TimeField(default=datetime.datetime.now().time())
+

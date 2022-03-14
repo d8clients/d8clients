@@ -35,6 +35,17 @@
 
     <div align="center">
         Ближайшие записи:
+        <div>
+        {% for ass in assignments %}
+            {{ ass.service.name }}
+            <br>
+            {{ ass.service.organization}}
+            <br>
+            {{ ass.date }}
+            {{ ass.start }}
+            <br>
+        {% endfor %}
+        </div>
     </div>
 
 

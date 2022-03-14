@@ -1,6 +1,6 @@
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
-
+from organization.assign_model import Assignment
 
 @login_required(login_url='login')
 def client_profile(request):
@@ -52,7 +52,8 @@ def client_profile(request):
             'admin_req_exist': admin_req.exists(),
 
             'admin_work': [admin.organization for admin in user.admin.all()],
-            'employee_work': [employee.organization for employee in user.employee.all()]
+            'employee_work': [employee.organization for employee in user.employee.all()],
+            'assignments': Assignment.objects.filter().order_by('date')
 
         }
         return render(request, 'client/work_account_profile.html', context)
@@ -64,7 +65,8 @@ def client_profile(request):
         'employee_req': employee_req,
         'employee_req_exist': employee_req.exists(),
         'admin_req': admin_req,
-        'admin_req_exist': admin_req.exists()
+        'admin_req_exist': admin_req.exists(),
+        'assignments': user.client.assignments.all().order_by('date')
     }
 
     return render(request, 'client/client_profile.html', context)

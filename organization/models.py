@@ -1,5 +1,8 @@
 from django.db import models
 from base.models import User
+# from staff.models import Employee
+# from client.models import Client
+# import datetime
 
 
 class Organization(models.Model):
@@ -32,3 +35,13 @@ class Service(models.Model):
 
     def __str__(self):
         return str(self.name)
+
+
+# class Assignment(models.Model):
+#     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, related_name="assignments")
+#     client = models.ForeignKey(Client, on_delete=models.CASCADE, related_name="assignments")
+#     service = models.ForeignKey(Service, on_delete=models.CASCADE, related_name='assignments')
+#
+#     # время начала записи
+#     date = models.DateField(default=datetime.datetime.now().date())
+#     start = models.TimeField(default=datetime.datetime.now().time())

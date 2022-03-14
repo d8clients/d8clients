@@ -24,10 +24,11 @@ class EditEmployee(forms.ModelForm):
 
 
 class WorkDayForm(forms.ModelForm):
-    date = forms.DateField(widget=forms.DateInput(format='%m/%d/%y'))
-    start = forms.TimeField(widget=forms.TimeInput(format='%H:%M'))
-    end = forms.TimeField(widget=forms.TimeInput(format='%H:%M'))
+
+    date = forms.DateField(label='Дата', widget=forms.SelectDateWidget)
+    start = forms.TimeField(label='Время начала', widget=forms.TimeInput)
+    end = forms.TimeField(label='Время конца', widget=forms.TimeInput)
 
     class Meta:
         model = WorkDay
-        fields = '__all__'
+        fields = ['date', 'start', 'end']

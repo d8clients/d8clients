@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
-from .models import Employee
+from .models import Employee, WorkDay
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from organization.views import edit_org_perm
 from .forms import EditEmployee, WorkDayForm
-from datetime import datetime
+from organization.forms import AddEmployee
+
 
 def employee_profile(request, pk):
     """
@@ -83,11 +84,33 @@ def edit_timetable(request, pk):
     form = WorkDayForm()
 
     if request.method == "POST":
-        form = WorkDayForm(request.POST)
-        print(form.fields['date'])
-        print(form.fields['start'])
-        print(form.fields['end'])
-        redirect('org_main')
+        if "cancel" in request.POST:
+            return redirect('employee_profile', pk)
+        else:
+            form = WorkDayForm(request.POST)
+            if form.is_valid():
+                WorkDay.objects.filter(employee=employee).filter(date=form.cleaned_data['date']).delete()
+                workday = form.save(commit=False)
+                workday.employee = employee
+                workday.save()
+                messages.success(request, "Расписание изменено!")
 
     context = {'form': form, 'title': "Редактировать расписание"}
     return render(request, 'staff/edit_timetable.html', context=context)
+
+
+@login_required(login_url='login')
+def employee_assignments(request, pk):
+
+    try:
+        employee = Employee.objects.get(id=pk)
+    except Employee.DoesNotExist:
+        messages.error(request, "Такого сотрудника не существует")
+        return redirect('org_main')
+
+    if not request.user.employee.filter(id=pk).exists():
+        return redirect("employee_profile", pk)
+
+    context = {'employee': employee,
+               'assignments': employee.assignments.all().order_by('date')}
+    return render(request, 'staff/employee_assignments.html', context=context)
