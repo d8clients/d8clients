@@ -1,12 +1,31 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}
     d8clients
 {% endblock %}
 
 {% block content %}
-    <div align="center">
-        <h1>d8clients</h1>
-        <p>Сервис онлайн записи</p>
-    </div>
+    <main style="margin-bottom: 1rem;">
+          <div class="container">
+            <picture>
+              <img id="picture" src="{% static 'pictures/BanerMainPage.png' %}" class="img-fluid">
+            </picture>
+          </div>
+
+            <div class="container">
+              <div style="margin-left: 0.1rem; margin-right: 0.1rem;" class="row mainBlock">
+                <h1 style="margin-bottom: 1rem;">Список организаций</h1>
+
+                <ul id="list" class="navbar-nav me-auto mb-3 mb-lg-0">
+
+                </ul>
+
+                <div id="butonStyle">
+                    <button type="button" id="AddButton" value="Add" class="btn btn-light" onClick="addList()">Добавить организацию</button>
+                </div>
+
+          </div>
+        </div>
+      </main>
 {% endblock %}

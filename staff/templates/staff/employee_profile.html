@@ -12,6 +12,7 @@
 
     {% if is_admin %}
     <a href="{% url 'edit_employee' employee.id %}"> Редактировать </a>
+    <a href="{% url 'edit_timetable' employee.id %}"> Редактировать расписание </a>
     {% endif %}
 
     <div>

@@ -5,17 +5,21 @@ from .validate import validate_password, validate_name
 
 # форма для входа пользователя в систему
 class LoginForm(forms.Form):
-    email = forms.EmailField()
-    password = forms.CharField(widget=forms.PasswordInput)
+    email = forms.EmailField(label='', widget=forms.EmailInput(attrs={'placeholder': 'Email'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Пароль'}))
 
 
 # форма для регистрации нового пользователя
 class UserRegistrationForm(forms.ModelForm):
-    name = forms.CharField(label='Имя', max_length=64, min_length=1)
-    surname = forms.CharField(label='Фамилия', max_length=64, min_length=1)
-    password = forms.CharField(label='Пароль', widget=forms.PasswordInput)
-    password2 = forms.CharField(label='Повторите пароль', widget=forms.PasswordInput)
-    business_only = forms.BooleanField(label='Создать аккаунт только для работы', required=False, initial=False)
+    name = forms.CharField(label="", max_length=64, min_length=1,
+                           widget=forms.TextInput(attrs={'placeholder': 'Имя'}))
+    surname = forms.CharField(label="", max_length=64, min_length=1,
+                              widget=forms.TextInput(attrs={'placeholder': 'Фамилия'}))
+    email = forms.EmailField(label="", widget=forms.EmailInput(attrs={'placeholder': 'Email'}))
+    password = forms.CharField(label="", widget=forms.PasswordInput(attrs={'placeholder': 'Пароль'}))
+    password2 = forms.CharField(label="", widget=forms.PasswordInput(attrs={'placeholder': 'Повторите пароль'}))
+    business_only = forms.BooleanField(label='Создать аккаунт только для работы',
+                                       required=False, initial=False)
 
     # форма связана с моделью User
     class Meta:
@@ -54,9 +58,12 @@ class UserRegistrationForm(forms.ModelForm):
 
 
 class PasswordChangeForm(forms.Form):
-    old_password = forms.CharField(label='Старый пароль', widget=forms.PasswordInput, required=False)
-    password = forms.CharField(label='Новый пароль', widget=forms.PasswordInput, required=False)
-    password2 = forms.CharField(label='Повторите новый пароль', widget=forms.PasswordInput, required=False)
+    old_password = forms.CharField(label='', widget=forms.PasswordInput(attrs={'placeholder': 'Старый пароль'}),
+                                   required=False)
+    password = forms.CharField(label='', widget=forms.PasswordInput(attrs={'placeholder': 'Новый пароль'}),
+                               required=False)
+    password2 = forms.CharField(label='', widget=forms.PasswordInput(attrs={'placeholder': 'Повторите новый пароль'}),
+                                required=False)
 
     def clean(self):
         # проверка нового пароля на выполнение требований
@@ -68,8 +75,10 @@ class PasswordChangeForm(forms.Form):
 
 
 class UserChangeForm(forms.ModelForm):
-    name = forms.CharField(label='Имя', max_length=64, min_length=1)
-    surname = forms.CharField(label='Фамилия', max_length=64, min_length=1)
+    name = forms.CharField(label='', max_length=64, min_length=1,
+                           widget=forms.TextInput(attrs={'placeholder': 'Имя'}))
+    surname = forms.CharField(label='', max_length=64, min_length=1,
+                              widget=forms.TextInput(attrs={'placeholder': 'Фамилия'}))
 
     class Meta:
         model = User

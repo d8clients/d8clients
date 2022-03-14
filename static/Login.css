@@ -1,0 +1,177 @@
+@font-face {
+    font-family: MusticaproSemibold;
+    src: url(fonts/MusticaproSemibold.otf);
+}
+
+@font-face {
+    font-family: KarloCham-Line; 
+    src: url(fonts/KarloCham-Line.otf);
+}
+
+#Logo{
+    font-family: "KarloCham-Line";
+    font-weight: 900;
+    font-size: 2rem;
+    line-height: 2rem;
+    padding-top: 0rem;
+    padding-bottom: 0rem;
+    letter-spacing: 5px;
+    color: rgba(0,0,0,.75);
+}
+
+#Menu{
+    padding-left: 0rem;
+}
+
+.nav-item{
+    font-family: "MusticaproSemibold";
+}
+
+#bg{
+    background-color: #77a3c7;
+    line-height: 2.5;
+}
+
+#firstblock{
+    margin-top: 140px;
+    margin-bottom: 20px;
+}
+
+#picture{
+    margin-top: 1rem;
+}
+
+.block{
+    background: white;
+    border-radius: 25px;
+
+}
+
+.mainBlock{
+    background: #ededed;
+    border-radius: 25px;
+    padding: 2rem;
+    text-align: center;
+    align-items: center;
+}
+
+.mainBlock2{
+    font-family: "MusticaproSemibold";
+    background: #ededed;
+    margin: 2rem;
+    font-weight: 900;
+    font-size: 2rem;
+    line-height: 2rem;
+    padding-top: 0rem;
+    padding-bottom: 0rem;
+    letter-spacing: 3px;
+    color: rgba(0,0,0,.75);
+    text-align: center;
+}
+
+.item-responsive {
+    position: relative;
+  }
+  
+  .item-responsive:before {
+    display: block;
+    content: ""; 
+    width: 100%; 
+  }
+
+  .item-responsive>.content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+  
+  .item-4by3 {
+    width: 15rem;
+    padding-top: 150%; 
+  }
+
+  .carousel-indicators li {
+      background-color: black;
+  }
+
+  .list{
+    display: inline-block; 
+    margin-left: 0.3rem;
+    margin-right: 0.3rem;
+  }
+
+  #list{
+    display: inline-block;
+  }
+
+  #AddButton{
+    width: 20rem;
+    background: #cb8a8a;
+    border-radius: 25px;
+    font-family: "MusticaproSemibold";
+    margin: 1rem;
+    font-weight: 300;
+    font-size: 1.3rem;
+    line-height: 2rem;
+    padding: 1rem;
+    letter-spacing: 1px;
+    text-align: center;
+  }
+
+  #butonStyle{
+    margin-bottom: 1rem;
+  }
+
+  #footer{
+    height: 55px;
+  }
+
+
+
+
+
+
+  input[type=text], input[type=password], input[type=email] {
+    width: 100%;
+    padding: 15px;
+    margin: 5px 0 22px 0;
+    display: inline-block;
+    border: none;
+    background: white;
+    border-radius: 10px;
+  }
+  
+  input[type=text]:focus, input[type=password]:focus, input[type=email]:focus {
+    background-color: #ddd;
+    outline: none;
+  }
+  
+  /* Set a style for the submit/register button */
+  .registerbtn {
+    border-radius: 10px;
+    background-color: #cb8a8a;
+    color: white;
+    padding: 16px 20px;
+    margin: 8px 0;
+    border: none;
+    cursor: pointer;
+    width: 100%;
+    opacity: 0.9;
+  }
+  
+  .registerbtn:hover {
+    opacity:1;
+  }
+  
+  /* Add a blue text color to links */
+  a {
+    color: dodgerblue;
+  }
+  
+  /* Set a grey background color and center the text of the "sign in" section */
+  .signin {
+    background-color: #f1f1f1;
+    text-align: center;
+  }

@@ -1,20 +1,40 @@
-<header>
-        <div class="d-flex flex-column flex-md-row align-items-center pb-3 mb-4 border-bottom">
-          <a href="/" class="d-flex align-items-center text-dark text-decoration-none">
-            <span class="fs-4">d8clients</span>
-          </a>
-
-          <nav class="d-inline-flex mt-2 mt-md-0 ms-md-auto">
-              <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'main' %}">На главную</a>
-              <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'about_us' %}">О нас</a>
-              <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'org_main' %}">Организации</a>
-              {% if request.user.is_authenticated %}
-                <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'client_profile'%}">Профиль</a>
-                <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'logout' %}">Выйти</a>
-              {% else %}
-                <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'login' %}">Войти</a>
-              {% endif %}
-
-          </nav>
-        </div>
-</header>
+<header id="header" class="fixed-top">
+              <nav style="background: white;" class="navbar navbar-expand-lg">
+                <div class="container">
+                  <a id="Logo" class="navbar-brand" href="#">d8clients</a>
+                </div>
+              </nav>
+              <nav id="bg" class="navbar navbar-expand-lg navbar-light">
+                <div class="container">
+                  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                  <span class="navbar-toggler-icon"></span>
+                  </button>
+                  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav me-auto mb-3 mb-lg-0">
+                      <li class="nav-item">
+                        <a style="color: rgba(0,0,0,.75);" id="Menu" class="nav-link" aria-current="page" href="{% url 'main' %}">Главная</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="{% url 'about_us' %}">О компании</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="{% url 'org_main' %}">Организации</a>
+                      </li>
+                    </ul>
+                    {% if request.user.is_authenticated %}
+                        <div class="nav-item">
+                          <a style="color: rgba(0,0,0,.75);" class="nav-link" href="{% url 'client_profile'%}">Профиль</a>
+                        </div>
+                        <div class="nav-item">
+                          <a style="color: rgba(235, 64, 52,.70);" class="nav-link" href="{% url 'logout' %}">Выход</a>
+                        </div>
+                    {% else%}
+                        <div class="nav-item">
+                          <a style="color: rgba(235, 64, 52,.70);" class="nav-link" href="{% url 'login' %}">Вход</a>
+                        </div>
+                    {% endif %}
+                  </div>
+                </div>
+              </nav>
+        </header>
