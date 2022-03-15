@@ -1,4 +1,11 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block styles %}
+        <link href="{% static 'CastomersShedule.css' %}" rel="stylesheet" type="text/css">
+        <script src="{% static 'MainPage.js' %}"></script>
+{% endblock %}
+
 
 {% block title %}
     d8clients
@@ -9,10 +16,14 @@
     {% include 'organization/org_navbar.html' %}
 
     <div align="center">
+        <div style="margin-left: 0.1rem; margin-right: 0.1rem;" class="row tableBlockBlue">
             {% for org in subscribes %}
-            <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'org_profile' org.id %}">{{org.name}}</a>
-            <br>
+            <div class="col-12 mini-block">
+                <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'org_profile' org.id %}">{{org.name}}</a>
+                <br>
+            </div>
             {% endfor%}
+        </div>
     </div>
 
 {% endblock %}

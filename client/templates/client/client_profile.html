@@ -1,4 +1,10 @@
-{% extends 'base.html'%}
+{% extends 'base.html' %}
+{% load static %}
+
+{% block styles %}
+        <link href="{% static 'CastomersShedule.css' %}" rel="stylesheet" type="text/css">
+        <script src="{% static 'MainPage.js' %}"></script>
+{% endblock %}
 
 {% block title %}
     Личный кабинет
@@ -6,48 +12,62 @@
 
 {% block content %}
 
-    <div align="center">
-        <h3> {{ user }} </h3>
-        <br> <br>
+    <div style="margin-left: 0.1rem; margin-right: 0.1rem;" class="mainBlock">
+                  <div class="modal-body">
+
+                    <form action="">
+                      <div class="container">
+                        <div class="row">
+                            <div class="me-auto col-lg-2 col-sm-12 col-xs-6">
+                                <picture>
+                                    <img id="picture" src="{% static 'pictures/EJ9GnLjVtdQ.jpg' %}" class="img-fluid">
+                                  </picture>
+                            </div>
+                            <div class="me-auto col-lg-10 col-sm-12 col-xs-6">
+                                <p class="inputForm"> {{ user }}</p>
+                            </div>
+                        </div>
+                      </div>
+                    </form>
+
+                  </div>
     </div>
 
-<style>
-.block_container{
-    display:grid;
-    grid-template-columns: 1fr 2fr 3fr 1fr;
-}
-</style>
 
 <div class="block_container">
 
-    <div align="center">
-        {% include 'client/work_requests.html' %}
-    </div>
 
     <div align="center">
-        Ваши избранные организации:
-        <br>
-        {% for org in subscribes %}
-            <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'org_profile' org.id %}">{{org.name}}</a>
-            <br>
-            {% endfor%}
+        <h5> Ваши избранные организации: </h5>
+         <div style="margin-left: 0.1rem; margin-right: 0.1rem;" class="row tableBlockBlue">
+         {% for org in subscribes %}
+             <div class="col-12 mini-block">
+                <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'org_profile' org.id %}">{{org.name}}</a>
+                <br>
+             </div>
+         {% endfor%}
+         </div>
     </div>
 
+    <br>
     <div align="center">
-        Ближайшие записи:
-        <div>
+        <h5> Ближайшие записи: </h5>
+        <div style="margin-top: 1rem; margin-left: 0.1rem; margin-right: 0.1rem;" class="row tableBlockPink">
         {% for ass in assignments %}
-            {{ ass.service.name }}
-            <br>
-            {{ ass.service.organization}}
-            <br>
-            {{ ass.date }}
-            {{ ass.start }}
-            <br>
+            <div class="col-6 mini-block">
+                {{ ass.service.name }} <br>
+                {{ ass.service.organization}} <br>
+            </div>
+            <div class="col-6 mini-block">
+                  {{ ass.date }} {{ ass.start }} <br>
+            </div>
         {% endfor %}
         </div>
     </div>
 
+    <div align="center">
+        {% include 'client/work_requests.html' %}
+    </div>
 
     <div align="center">
         <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'change_user_info' %}">Редактировать профиль</a>
@@ -60,3 +80,6 @@
 </div>
 
 {% endblock %}
+
+    </body>
+</html>

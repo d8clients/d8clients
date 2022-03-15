@@ -1,8 +1,10 @@
 {% if messages %}
     <ul class="messages">
         {% for message in messages %}
-        {{ message }}
-        <br>
+        <div align="center">
+            {{ message }}
+            <br>
+        </div>
         {% endfor %}
     </ul>
     {% endif %}

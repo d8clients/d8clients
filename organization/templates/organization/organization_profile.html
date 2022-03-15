@@ -1,4 +1,10 @@
-{% extends 'base.html'%}
+{% extends 'base.html' %}
+{% load static %}
+
+{% block styles %}
+        <link href="{% static 'CastomersShedule.css' %}" rel="stylesheet" type="text/css">
+        <script src="{% static 'MainPage.js' %}"></script>
+{% endblock %}
 
 {% block title %}
     {{ org.name }}
@@ -6,53 +12,37 @@
 
 {% block content %}
 
+ <div style="margin-left: 0.1rem; margin-right: 0.1rem;" class="mainBlock">
+      <div class="modal-body">
+
+        <form action="">
+          <div class="container">
+            <div class="row">
+                <div class="me-auto col-lg-10 col-sm-12 col-xs-6">
+                    <p class="inputForm"> {{ org.name }}</p>
+                </div>
+            </div>
+          </div>
+        </form>
+
+      </div>
+    </div>
+
 <div>
-    <h1 align="center"> {{ org.name }} </h1>
-    <p class="me-3 py-2 text-dark text-decoration-none" align="center" href="{% url 'org_main' %}"> {{ org.description }}</p>
+    <p class="me-3 py-2 text-dark text-decoration-none nav-item" align="center" href="{% url 'org_main' %}"> {{ org.description }}</p>
 </div>
-
-<div align="right">
-    {% if request.user.is_authenticated and request.user.is_client %}
-
-    <form method="POST" action="">
-        {% csrf_token %}
-        <input type="submit" name="{{ subscribed }}" value="{{ subscribed }}" />
-    </form>
-    {% endif %}
-
-    {% if request.user.is_anonymous %}
-
-    <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'login' %}?next={% url 'org_profile' org.id %}"> Авторизуйтесь, чтобы следить <br> за
-    обновлениями {{ org.name }} </a>
-    {% endif %}
-
-</div>
-
-<div align="right">
-    {% if is_admin %}
-    <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'org_edit' org.id %}"> Перейти в режим редактирования </a>
-    {% endif %}
-    {% if is_staff %}
-    <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'employee_ass' emp.id %}"> Посмотреть свое расписание </a>
-    {% endif %}
-
-    {% if request.user.is_client %}
-    <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'create_assignment1' org.id %}"> Записаться </a>
-    {% endif %}
-</div>
-
 
 
 <style>
     .block_container{
         display:grid;
-        grid-template-columns: 1fr 1fr 1fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr;
     }
 </style>
 
 <div class="block_container">
     <div align="center">
-        Наши сотрудники:
+        <h5> Наши сотрудники: </h5>
         <br>
         {% for employee in employees %}
         <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'employee_profile' employee.id %}"> {{ employee.user }} </a>
@@ -73,5 +63,39 @@
         {% endfor %}
 
     </div>
+
+    <div align="center">
+    {% if is_admin %}
+    <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'org_edit' org.id %}"> Перейти в режим редактирования </a>
+    <br>
+    {% endif %}
+    {% if is_staff %}
+    <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'employee_ass' emp.id %}"> Посмотреть свое расписание </a>
+    <br>
+    {% endif %}
+
+    {% if request.user.is_client %}
+    <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'create_assignment1' org.id %}"> Записаться </a>
+    <br>
+    {% endif %}
+
+    <div align="center">
+        {% if request.user.is_authenticated and request.user.is_client %}
+
+        <form method="POST" action="">
+            {% csrf_token %}
+            <input type="submit" name="{{ subscribed }}" value="{{ subscribed }}" />
+        </form>
+        {% endif %}
+
+        {% if request.user.is_anonymous %}
+
+        <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'login' %}?next={% url 'org_profile' org.id %}"> Авторизуйтесь, чтобы следить <br> за
+        обновлениями {{ org.name }} </a>
+    {% endif %}
+
+    </div>
+    </div>
+
 </div>
 {% endblock %}

@@ -1,4 +1,10 @@
 {% extends 'base.html'%}
+{% load static %}
+
+{% block styles %}
+        <link href="{% static 'CastomersShedule.css' %}" rel="stylesheet" type="text/css">
+        <script src="{% static 'MainPage.js' %}"></script>
+{% endblock %}
 
 {% block title %}
     Личный кабинет
@@ -12,41 +18,45 @@
         <br> <br>
     </div>
 
-<style>
-.block_container{
-    display:grid;
-    grid-template-columns: 1fr 1fr 1fr;
-}
-</style>
 
 <div class="block_container">
-    <div>
-        {% include 'client/work_requests.html' %}
-    </div>
 
     <div align="center">
         {% if user.is_admin %}
          <div align="center">
             <h5> Работа администратором: </h5>
-            {% for org in admin_work %}
-            <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'org_profile' org.id %}"> {{org}}</a>
-            <br>
-            {% endfor%}
+             <div style="margin-left: 0.1rem; margin-right: 0.1rem;" class="row tableBlockBlue">
+                {% for org in admin_work %}
+                  <div class="col-12 mini-block">
+                    <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'org_profile' org.id %}"> {{org}}</a>
+                    <br>
+                  </div>
+                {% endfor%}
+             </div>
          </div>
         {% endif %}
 
         {% if user.is_employee %}
         <div align="center">
             <h3> Работа исполнителем: </h3>
+            <div style="margin-left: 0.1rem; margin-right: 0.1rem;" class="row tableBlockPink">
             {% for org in employee_work %}
-            <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'org_profile' org.id %}"> {{org}}</a>
-            <br>
+             <div class="col-12 mini-block">
+                <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'org_profile' org.id %}"> {{org}}</a>
+                <br>
+             </div>
             {% endfor%}
+            </div>
         </div>
         {% endif %}
     </div>
 
+    <div>
+        {% include 'client/work_requests.html' %}
+    </div>
+
     <div align="center">
+        <br>
         <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'change_user_info' %}">Редактировать профиль</a>
         <br>
         <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'change_role' %}">Добавить функционал клиента</a>

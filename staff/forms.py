@@ -25,9 +25,12 @@ class EditEmployee(forms.ModelForm):
 
 class WorkDayForm(forms.ModelForm):
 
-    date = forms.DateField(label='Дата', widget=forms.SelectDateWidget)
-    start = forms.TimeField(label='Время начала', widget=forms.TimeInput)
-    end = forms.TimeField(label='Время конца', widget=forms.TimeInput)
+    date = forms.DateField(label='', widget=forms.DateInput(attrs={'placeholder': 'Напишите дату в формате dd/mm/yyyy'}),
+                           required=False)
+    start = forms.TimeField(label='Время начала', widget=forms.TimeInput(attrs={'placeholder': 'Введите время в формате HH:MM'}),
+                            required=False)
+    end = forms.TimeField(label='Время конца', widget=forms.TimeInput(attrs={'placeholder': 'Введите время в формате HH:MM'}),
+                          required=False)
 
     class Meta:
         model = WorkDay

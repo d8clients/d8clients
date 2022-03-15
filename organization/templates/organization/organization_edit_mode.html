@@ -1,4 +1,10 @@
-{% extends 'base.html'%}
+{% extends 'base.html' %}
+{% load static %}
+
+{% block styles %}
+        <link href="{% static 'CastomersShedule.css' %}" rel="stylesheet" type="text/css">
+        <script src="{% static 'MainPage.js' %}"></script>
+{% endblock %}
 
 {% block title %}
     Редактирование: {{ org.name }}
@@ -23,7 +29,7 @@
 <style>
     .block_container{
         display:grid;
-        grid-template-columns: 1fr 1fr 2fr 1fr;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
     }
 </style>
 
@@ -32,7 +38,7 @@
 
     <div>
     <h5> Сотрудники </h5>
-    <a class="me-3 py-2 text-dark text-decoration-none" align="center" href="{% url 'add_employee' org.id %}"> Добавить сотрудника </a>
+        <p> <a class="me-3 py-2 text-dark text-decoration-none" align="center" href="{% url 'add_employee' org.id %}"> Добавить сотрудника </a> </p>
     <div>
         Подтвержденные сотрудники:
         {% for employee in conf_employees %}
@@ -44,7 +50,7 @@
         {% endfor %}
     </div>
     <div>
-        Неподтвержденные сотрудники (дождитесь, пока пользователи подтвердят вашу заявку):
+        Неподтвержденные сотрудники (дождитесь, пока пользователи подтвердят вашу заявку): <br>
         {% for employee in unconf_employees %}
         <p>
             <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'employee_profile' employee.id %}"> {{ employee.user }} </a>
@@ -56,7 +62,7 @@
 
     <div>
     <h5> Администраторы </h5>
-    <a class="me-3 py-2 text-dark text-decoration-none" align="center" href="{% url 'add_admin' org.id %}"> Добавить администратора </a>
+        <p> <a class="me-3 py-2 text-dark text-decoration-none" align="center" href="{% url 'add_admin' org.id %}"> Добавить администратора </a> </p>
     <div>
         Подтвержденные администраторы:
         {% for admin in conf_admins %}
@@ -69,7 +75,7 @@
         {% endfor %}
     </div>
     <div>
-        Неподтвержденные администраторы (дождитесь, пока пользователи подтвердят вашу заявку):
+        Неподтвержденные администраторы (дождитесь, пока пользователи подтвердят вашу заявку): <br>
         {% for admin in unconf_admins %}
         <p>
             {{ admin.user }}

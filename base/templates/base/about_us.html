@@ -1,5 +1,11 @@
 {% extends 'base.html' %}
 {% load static %}
+
+{% block styles %}
+    <link href="{% static 'MainPage.css' %}" rel="stylesheet" type="text/css">
+    <script src="{% static 'MainPage.js' %}"></script>
+{% endblock %}
+
 {% block title %}
     d8clients
 {% endblock %}

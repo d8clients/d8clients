@@ -108,18 +108,21 @@ class AddService(forms.ModelForm):
 class CreateAssignmentStep1(forms.Form):
 
     service = forms.ModelChoiceField(
+        label='Выберите услугу',
         required=False,
-        widget=forms.Select,
+        widget=forms.Select(attrs={'placeholder': 'Выберите услугу'}),
         queryset=None
     )
 
     employee = forms.ModelChoiceField(
+        label='Выберите сотрудника',
         required=False,
-        widget=forms.Select,
+        widget=forms.Select(attrs={'placeholder': 'Выберите сотрудника'}),
         queryset=None
     )
 
-    date = forms.DateField(label='Дата', widget=forms.SelectDateWidget)
+    date = forms.DateField(label='', widget=forms.DateInput(attrs={'placeholder': 'Напишите дату в формате dd/mm/yyyy'}),
+                           required=False)
 
     def __init__(self, *args, **kwargs):
         self.organization = kwargs.pop('organization')
@@ -162,8 +165,9 @@ class CreateAssignmentStep1(forms.Form):
 class CreateAssignmentStep2(forms.Form):
 
     start = forms.ChoiceField(
+        label='Выберите подходящее вам время',
         required=False,
-        widget=forms.Select,
+        widget=forms.Select(attrs={'placeholder': 'Выберите подходяшее время'}),
     )
 
     def __init__(self, *args, **kwargs):

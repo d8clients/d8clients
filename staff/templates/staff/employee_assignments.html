@@ -1,21 +1,30 @@
 {% extends 'base.html' %}
+{% load static %}
+
+{% block styles %}
+        <link href="{% static 'CastomersShedule.css' %}" rel="stylesheet" type="text/css">
+        <script src="{% static 'MainPage.js' %}"></script>
+{% endblock %}
+
 {% block title %}
     Записи сотрудника
 {% endblock %}
 
 {% block content %}
 <div align="center">
-        <h4> Ближайшие записи: </h4> <br>
-        <div>
+        <h4 <p class="me-3 py-2 text-dark text-decoration-none nav-item"> Ближайшие записи: </h4> <br>
+        <div style="margin-left: 0.1rem; margin-right: 0.1rem;" class="row tableBlockPink">
         {% for ass in assignments %}
+            <div class="col-6 mini-block">
             {{ ass.service.name }}
             <br>
             {{ ass.service.organization}}
             <br>
+            </div>
+            <div class="col-6 mini-block">
             {{ ass.date }}
             {{ ass.start }}
-            <br>
-            <br>
+            </div>
         {% endfor %}
         </div>
     </div>

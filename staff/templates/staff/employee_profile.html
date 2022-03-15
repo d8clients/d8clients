@@ -1,4 +1,10 @@
-{% extends 'base.html'%}
+{% extends 'base.html' %}
+{% load static %}
+
+{% block styles %}
+        <link href="{% static 'CastomersShedule.css' %}" rel="stylesheet" type="text/css">
+        <script src="{% static 'MainPage.js' %}"></script>
+{% endblock %}
 
 {% block title %}
     {{ org.name }}
@@ -6,6 +12,7 @@
 
 {% block content %}
 <div align="center">
+
     <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'org_profile' employee.organization.id %}"> {{ employee.organization.name }} </a>
     <h4> {{ employee.user }} </h4>
     <p> {{ employee.bio }} </p>
@@ -16,12 +23,15 @@
     {% endif %}
 
     <div>
-        Можно записаться на услуги:
-        <br>
+        <h6> Можно записаться на услуги: </h6>
+        <div style="margin-left: 0.1rem; margin-right: 0.1rem;" class="row tableBlockBlue">
         {% for service in services %}
+        <div class="col-12 mini-block">
         <a class="me-3 py-2 text-dark text-decoration-none" href="{% url 'service_profile' service.id %}"> {{ service }} </a>
         <br>
+        </div>
         {% endfor %}
+        </div>
     </div>
 </div>
 {% endblock %}
