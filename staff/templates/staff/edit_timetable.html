@@ -36,7 +36,7 @@
               <div style="margin-left: 0.1rem; margin-right: 0.1rem;" class="mainBlock">
                 <h1 style="margin-bottom: 1rem;">{{ title }}</h1>
                 <div class="modal-body">
-
+                  {% include 'flash_messages.html' %}
                   <form method="POST" action="">
                     <div class="container">
                         {% csrf_token %}
